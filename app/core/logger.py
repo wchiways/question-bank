@@ -35,7 +35,7 @@ def setup_logger():
     # 控制台输出 - 彩色格式
     loguru_logger.add(
         sys.stdout,
-        level=settings.LOG_LEVEL,
+        level=settings.logging.level,
         format=(
             "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
             "<level>{level: <8}</level> | "
@@ -46,14 +46,14 @@ def setup_logger():
     )
 
     # 文件输出 - JSON格式
-    log_path = Path(settings.LOG_FILE)
+    log_path = Path(settings.logging.file)
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
     loguru_logger.add(
-        settings.LOG_FILE,
-        level=settings.LOG_LEVEL,
+        settings.logging.file,
+        level=settings.logging.level,
         format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | {message}",
-        rotation=settings.LOG_ROTATION,
+        rotation=settings.logging.rotation,
         retention="30 days",
         compression="zip",
     )

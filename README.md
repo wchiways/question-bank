@@ -10,6 +10,7 @@
 - ✅ **分层设计**: 清晰的分层架构，易于维护
 - ✅ **三级缓存**: 内存缓存 + 数据库 + AI服务
 - ✅ **智能重试**: AI调用失败自动重试
+- ✅ **多AI平台**: 支持硅基流动、阿里百炼、智谱AI、Google、OpenAI等多个平台
 
 ## 🛠️ 技术栈
 
@@ -39,17 +40,38 @@ pip install -e .
 
 ### 配置
 
-复制环境变量模板：
+复制配置文件模板：
 
 ```bash
-cp .env.example .env
+cp config.example.json config.json
 ```
 
-编辑`.env`文件，填入你的AI API密钥：
+编辑`config.json`文件，配置你的AI服务：
 
-```env
-AI_API_KEY=your_api_key_here
+```json
+{
+  "ai": {
+    "default_provider": "siliconflow",
+    "providers": {
+      "siliconflow": {
+        "enabled": true,
+        "api_key": "YOUR_API_KEY"
+      },
+      "ali_bailian": {
+        "enabled": false,
+        "api_key": "YOUR_ALI_BAILIAN_API_KEY"
+      }
+    }
+  }
+}
 ```
+
+**支持的AI平台**:
+- **硅基流动** (siliconflow) - 默认，性价比高
+- **阿里百炼** (ali_bailian) - 阿里云大模型平台
+- **智谱AI** (zhipu) - 清华KEG实验室
+- **Google Studio AI** (google) - Google Gemini
+- **OpenAI** (openai) - GPT系列模型
 
 ### 运行
 
@@ -135,8 +157,8 @@ uv run pytest tests/ --cov=app --cov-report=html
 迁移步骤：
 1. 备份数据库：`cp question_bank.db question_bank.db.backup`
 2. 安装新依赖：`uv sync`
-3. 配置环境变量：复制`.env`
-4. 启动新服务：`uv run uvicorn app.main:app`
+3. 配置AI服务：复制`config.example.json`为`config.json`并填入API密钥
+4. 启动新服务：`uv run uvicorn app.main:app`或`./scripts/dev.sh`
 
 ## 📝 开发指南
 

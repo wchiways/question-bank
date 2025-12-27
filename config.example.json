@@ -1,0 +1,86 @@
+{
+  "app": {
+    "name": "OCS题库系统",
+    "version": "2.0.0",
+    "debug": true,
+    "api_v1_prefix": "/api/v1"
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8000
+  },
+  "database": {
+    "url": "sqlite+aiosqlite:///./question_bank.db",
+    "echo": false
+  },
+  "ai": {
+    "default_provider": "siliconflow",
+    "timeout": 30,
+    "max_retries": 3,
+    "providers": {
+      "siliconflow": {
+        "name": "硅基流动",
+        "enabled": true,
+        "api_key": "YOUR_SILICONFLOW_API_KEY",
+        "api_url": "https://api.siliconflow.cn/v1/chat/completions",
+        "model": "Qwen/QwQ-32B",
+        "max_tokens": 512,
+        "temperature": 0.1
+      },
+      "ali_bailian": {
+        "name": "阿里百炼",
+        "enabled": false,
+        "api_key": "YOUR_ALI_BAILIAN_API_KEY",
+        "api_url": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+        "model": "qwen-plus",
+        "max_tokens": 512,
+        "temperature": 0.1
+      },
+      "zhipu": {
+        "name": "智谱AI",
+        "enabled": false,
+        "api_key": "YOUR_ZHIPU_API_KEY",
+        "api_url": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+        "model": "glm-4-flash",
+        "max_tokens": 512,
+        "temperature": 0.1
+      },
+      "google": {
+        "name": "Google Studio AI",
+        "enabled": false,
+        "api_key": "YOUR_GOOGLE_API_KEY",
+        "api_url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+        "model": "gemini-pro",
+        "max_tokens": 512,
+        "temperature": 0.1
+      },
+      "openai": {
+        "name": "OpenAI",
+        "enabled": false,
+        "api_key": "YOUR_OPENAI_API_KEY",
+        "api_url": "https://api.openai.com/v1/chat/completions",
+        "model": "gpt-3.5-turbo",
+        "max_tokens": 512,
+        "temperature": 0.1
+      }
+    }
+  },
+  "cache": {
+    "type": "memory",
+    "ttl": 3600,
+    "redis_url": null
+  },
+  "rate_limit": {
+    "enabled": true,
+    "per_minute": 60
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/app.log",
+    "rotation": "10 MB"
+  },
+  "security": {
+    "secret_key": "change-this-in-production-use-random-string",
+    "allowed_hosts": ["*"]
+  }
+}

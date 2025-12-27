@@ -4,7 +4,7 @@ import re
 from typing import Optional
 from app.core.config import settings
 from app.core.logger import get_logger
-from app.providers.siliconflow_provider import SiliconFlowProvider
+from app.providers.multi_provider import UniversalAIProvider
 from app.providers.mock_provider import MockAIProvider
 
 logger = get_logger(__name__)
@@ -12,20 +12,32 @@ logger = get_logger(__name__)
 
 class AIAsyncService:
     """
-    AI异步服务 - 封装AI调用逻辑
+    AI异步服务 - 封装AI调用逻辑，支持多个AI服务商
     """
 
-    def __init__(self):
-        """初始化AI服务"""
-        if settings.AI_PROVIDER == "mock":
+    def __init__(self, provider_name: Optional[str] = None):
+        """
+        初始化AI服务
+
+        Args:
+            provider_name: 指定的提供商名称，如果不指定则使用配置中的默认提供商
+        """
+        self.provider_name = provider_name or settings.ai.default_provider
+
+        # 获取提供商配置
+        provider_config = settings.ai.providers.get(self.provider_name)
+
+        # 如果提供商未配置或未启用，使用Mock
+        if not provider_config or not provider_config.enabled:
+            logger.warning(f"⚠️  AI提供商 {self.provider_name} 未配置或未启用，使用Mock提供商")
             self.provider = MockAIProvider()
         else:
-            self.provider = SiliconFlowProvider(
-                api_key=settings.AI_API_KEY,
-                model=settings.AI_MODEL,
-                timeout=settings.AI_TIMEOUT,
-                max_retries=settings.AI_MAX_RETRIES
-            )
+            try:
+                self.provider = UniversalAIProvider(self.provider_name)
+                logger.info(f"✅ AI服务已初始化: {provider_config.name}")
+            except Exception as e:
+                logger.error(f"❌ 初始化AI提供商失败: {e}")
+                self.provider = MockAIProvider()
 
     async def get_answer(
         self,

@@ -42,6 +42,11 @@ uv.lock
 .env.local
 .env.*.local
 
+# Config files (keep example)
+config.json
+config.*.json
+!config.example.json
+
 # Database
 *.db
 *.db-journal
