@@ -85,13 +85,14 @@ async def root():
         "version": settings.APP_VERSION,
         "docs": "/docs",
         "redoc": "/redoc",
-        "health": "/health"
+        "health": "/health",
+        "api": settings.API_V1_PREFIX
     }
 
 
-# 注册路由 (待添加)
-# from app.api.v1.router import api_router
-# app.include_router(api_router, prefix=settings.API_V1_PREFIX)
+# 注册路由
+from app.api.v1.router import api_router
+app.include_router(api_router, prefix=settings.API_V1_PREFIX)
 
 
 if __name__ == "__main__":
