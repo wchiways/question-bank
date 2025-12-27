@@ -15,8 +15,8 @@ class CacheRepository:
 
     def __init__(self):
         self._memory_cache: dict = {}
-        self._cache_type = settings.CACHE_TYPE
-        self._ttl = settings.CACHE_TTL
+        self._cache_type = settings.cache.type
+        self._ttl = settings.cache.ttl
 
         if self._cache_type == "redis":
             # TODO: 实现Redis缓存
