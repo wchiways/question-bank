@@ -19,7 +19,7 @@ async def lifespan(app: FastAPI):
         app: FastAPI应用实例
     """
     # 启动时执行
-    logger.info(f"🚀 {settings.APP_NAME} v{settings.APP_VERSION} 启动中...")
+    logger.info(f"🚀 {settings.app.name} v{settings.app.version} 启动中...")
     await init_db()
     logger.info("✅ 数据库初始化完成")
 
@@ -33,19 +33,19 @@ async def lifespan(app: FastAPI):
 
 # 创建FastAPI应用
 app = FastAPI(
-    title=settings.APP_NAME,
-    version=settings.APP_VERSION,
+    title=settings.app.name,
+    version=settings.app.version,
     description="基于FastAPI + AsyncIO的高性能题库查询系统",
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
+    openapi_url=f"{settings.app.api_v1_prefix}/openapi.json",
     lifespan=lifespan,
 )
 
 # 中间件配置
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_HOSTS,
+    allow_origins=settings.security.allowed_hosts,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -65,9 +65,9 @@ async def health_check():
     """
     return {
         "status": "healthy",
-        "app_name": settings.APP_NAME,
-        "version": settings.APP_VERSION,
-        "environment": "development" if settings.DEBUG else "production"
+        "app_name": settings.app.name,
+        "version": settings.app.version,
+        "environment": "development" if settings.app.debug else "production"
     }
 
 
@@ -81,18 +81,18 @@ async def root():
         欢迎信息和文档链接
     """
     return {
-        "message": f"欢迎使用{settings.APP_NAME}",
-        "version": settings.APP_VERSION,
+        "message": f"欢迎使用{settings.app.name}",
+        "version": settings.app.version,
         "docs": "/docs",
         "redoc": "/redoc",
         "health": "/health",
-        "api": settings.API_V1_PREFIX
+        "api": settings.app.api_v1_prefix
     }
 
 
 # 注册路由
 from app.api.v1.router import api_router
-app.include_router(api_router, prefix=settings.API_V1_PREFIX)
+app.include_router(api_router, prefix=settings.app.api_v1_prefix)
 
 
 if __name__ == "__main__":
@@ -100,8 +100,8 @@ if __name__ == "__main__":
 
     uvicorn.run(
         "app.main:app",
-        host=settings.HOST,
-        port=settings.PORT,
-        reload=settings.DEBUG,
-        log_level=settings.LOG_LEVEL.lower(),
+        host=settings.server.host,
+        port=settings.server.port,
+        reload=settings.app.debug,
+        log_level=settings.logging.level.lower(),
     )

@@ -14,9 +14,10 @@ async def health_check():
     Returns:
         HealthResponse: 健康状态信息
     """
+    from app.core.config import settings
     return HealthResponse(
         status="healthy",
-        app_name=settings.APP_NAME,
-        version=settings.APP_VERSION,
-        environment="development" if settings.DEBUG else "production"
+        app_name=settings.app.name,
+        version=settings.app.version,
+        environment="development" if settings.app.debug else "production"
     )

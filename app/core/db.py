@@ -8,8 +8,8 @@ logger = get_logger(__name__)
 
 # 创建异步引擎
 engine = create_async_engine(
-    settings.DATABASE_URL,
-    echo=settings.DATABASE_ECHO,
+    settings.database.url,
+    echo=settings.database.echo,
     pool_pre_ping=True,  # 连接健康检查
 )
 
