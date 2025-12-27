@@ -94,15 +94,37 @@ class AIAsyncService:
         Returns:
             完整的提示词
         """
-        base_prompt = '''你是一个题库接口函数，请根据问题和选项提供答案。如果是选择题，直接返回对应选项的内容，注意是内容，不是对应字母；如果题目是多选题，将内容用"###"连接；如果选项内容是"对","错"，且只有两项，或者question_type是judgement，你直接返回"对"或"错"的文字，不要返回字母；如果是填空题，直接返回填空内容，多个空使用###连接。回答格式为：{"answer":"your_answer_str"}，严格使用此格式回答。下面是一个问题，请你用json格式回答我，绝对不要使用自然语言'''
-
-        question_data = {
-            "问题": title,
-            "选项": options,
-            "类型": question_type
+        # 根据题目类型提供更详细的说明
+        type_instructions = {
+            "single": "单选题：只返回一个正确选项的完整内容，不要包含字母前缀（如A. B. C.），直接返回选项文字。",
+            "multiple": "多选题：如果有多个正确答案，用三个井号###连接每个答案的内容。",
+            "judgement": "判断题：直接返回'对'或'错'。",
+            "fill": "填空题：直接返回填空内容，如果有多个空，用###连接。"
         }
+        
+        instruction = type_instructions.get(question_type, type_instructions["single"])
+        
+        base_prompt = f'''你是一个专业的题库系统，请根据问题提供准确的答案。
 
-        return base_prompt + f"\n{json.dumps(question_data, ensure_ascii=False)}"
+{instruction}
+
+重要：
+- 只返回答案内容，不要包含任何解释或额外文字
+- 不要返回字母编号（如A、B、C）
+- 严格使用JSON格式：{{"answer":"答案内容"}}
+- 不要返回任何自然语言描述
+
+例如：
+- 如果答案是"A. 北京"，只返回"北京"
+- 如果答案是"对"或"错"，直接返回"对"或"错"
+- 如果填空题答案是"北京###上海"，返回"北京###上海"
+
+问题：{title}'''
+
+        if options:
+            base_prompt += f'\n选项：{options}'
+
+        return base_prompt
 
     def _parse_response(self, response: str) -> Optional[str]:
         """
