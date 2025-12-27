@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.query import QueryRequest, QueryResponse
 from app.services.query_service import QueryService
 from app.api.deps import get_query_service
+from app.utils.helpers import match_option
 from app.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -47,6 +48,13 @@ async def query_question(
 
         # 执行查询
         result = await query_service.query(request)
+        
+        # 智能答案匹配：如果答案不包含字母前缀，尝试从选项中匹配
+        if result.data and result.code == 1 and options:
+            matched_answer = match_option(result.data, options)
+            if matched_answer != result.data:
+                logger.info(f"🎯 智能匹配: '{result.data[:30]}...' -> '{matched_answer}'")
+                result.data = matched_answer
 
         return result
 

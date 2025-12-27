@@ -130,6 +130,29 @@ curl "http://localhost:8000/api/v1/query?title=中国的首都是哪里？&optio
 }
 ```
 
+### 🧩 OCS网课助手配置
+
+在油猴脚本或OCS软件中配置自定义题库：
+
+```json
+{
+    "name": "OCS题库(FastAPI版)",
+    "homepage": "https://chiway.blog/",
+    "url": "http://localhost:8000/api/v1/query",
+    "method": "get",
+    "type": "GM_xmlhttpRequest",
+    "contentType": "json",
+    "data": {
+        "title": "${title}",
+        "options": "${options}",
+        "type": "${type}"
+    },
+    "handler": "return (res)=>res.code === 0 ? [undefined, undefined] : [undefined, res.data]"
+}
+```
+
+> **注意**: `handler` 中必须使用 `res.data` 而不是 `res.data.data`，因为FastAPI版本的响应结构更加扁平。
+
 ## 🧪 测试
 
 ```bash

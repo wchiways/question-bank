@@ -96,28 +96,33 @@ class AIAsyncService:
         """
         # 根据题目类型提供更详细的说明
         type_instructions = {
-            "single": "单选题：只返回一个正确选项的完整内容，不要包含字母前缀（如A. B. C.），直接返回选项文字。",
-            "multiple": "多选题：如果有多个正确答案，用三个井号###连接每个答案的内容。",
+            "single": "单选题：返回完整答案，包括字母和内容，例如：'A. 答案内容' 或 'A'。",
+            "multiple": "多选题：如果有多个正确答案，用###连接每个完整答案，包括字母，例如：'A. 答案一###C. 答案二'。",
             "judgement": "判断题：直接返回'对'或'错'。",
             "fill": "填空题：直接返回填空内容，如果有多个空，用###连接。"
         }
         
         instruction = type_instructions.get(question_type, type_instructions["single"])
         
+        # 如果有选项，添加示例说明
+        options_help = ""
+        if options:
+            options_help = f"""
+重要：必须返回完整答案格式！
+- 如果答案是A选项，必须返回"A. 选项内容"
+- 不能只返回"选项内容"或"A"
+- 必须包含字母和完整文字
+
+示例：
+问题：Access数据库的特点是？
+选项：A. 关系模型 B. 层次模型 C. 网状模型 D. 面向对象模型
+正确答案：A. 关系模型  （而不是只返回"关系模型"）
+"""
+        
         base_prompt = f'''你是一个专业的题库系统，请根据问题提供准确的答案。
 
 {instruction}
-
-重要：
-- 只返回答案内容，不要包含任何解释或额外文字
-- 不要返回字母编号（如A、B、C）
-- 严格使用JSON格式：{{"answer":"答案内容"}}
-- 不要返回任何自然语言描述
-
-例如：
-- 如果答案是"A. 北京"，只返回"北京"
-- 如果答案是"对"或"错"，直接返回"对"或"错"
-- 如果填空题答案是"北京###上海"，返回"北京###上海"
+{options_help}
 
 问题：{title}'''
 
@@ -128,7 +133,7 @@ class AIAsyncService:
 
     def _parse_response(self, response: str) -> Optional[str]:
         """
-        解析AI响应
+        解析AI响应 - 智能提取答案，支持多种格式
 
         Args:
             response: AI返回的原始文本
@@ -140,37 +145,53 @@ class AIAsyncService:
             return None
 
         try:
-            # 尝试提取JSON部分
-            if "{" in response and "}" in response:
-                start_idx = response.find("{")
-                end_idx = response.rfind("}") + 1
-                json_str = response[start_idx:end_idx]
-
-                # 清理JSON字符串
-                json_str = json_str.replace("'", '"')
-                json_str = re.sub(r'{\s*(\w+)(\s*:)', r'{"\1"\2', json_str)
-                json_str = re.sub(r',\s*(\w+)(\s*:)', r',"\1"\2', json_str)
-                json_str = re.sub(r'\s+', ' ', json_str).strip()
-
-                # 解析JSON
-                data = json.loads(json_str)
-
-                # 提取answer（兼容拼写错误）
-                if "answer" in data:
-                    return data["answer"]
-                elif "anwser" in data:
-                    return data["anwser"]
-
-            # 如果JSON解析失败，尝试正则提取
-            answer_match = re.search(r'"answer"\s*:\s*"([^"]+)"', response)
-            if answer_match:
-                return answer_match.group(1)
-
+            # 清理响应
+            response = response.strip()
+            
+            # 方法1: 尝试提取JSON格式的answer
+            json_match = re.search(r'"answer"\s*:\s*"([^"]+)"', response, re.IGNORECASE)
+            if json_match:
+                answer = json_match.group(1)
+                logger.info(f"✅ JSON格式解析成功: {answer[:50]}...")
+                return self._format_answer(answer, response)
+            
+            # 方法2: 如果有选项，尝试匹配选项
+            # 从AI服务初始化时获取选项（这里简化处理）
+            # 先尝试找到匹配的选项
+            
+            # 方法3: 直接返回清理后的文本
+            # 移除常见的多余文字
+            cleaned = re.sub(r'^(答案是?|结果为?|正确答案是?)[:：]*\s*', '', response)
+            cleaned = cleaned.strip()
+            
+            if cleaned and len(cleaned) > 0:
+                logger.info(f"✅ 直接使用清理后的答案: {cleaned[:50]}...")
+                return cleaned
+            
+            logger.warning(f"⚠️ 无法解析AI响应: {response[:100]}")
             return None
 
-        except json.JSONDecodeError as e:
-            logger.error(f"❌ JSON解析失败: {e}, 原始响应: {response[:200]}")
-            return None
         except Exception as e:
             logger.error(f"❌ 解析响应失败: {e}")
             return None
+    
+    def _format_answer(self, answer: str, full_response: str) -> str:
+        """
+        格式化答案，确保包含选项字母
+        
+        Args:
+            answer: 提取的答案
+            full_response: 完整响应
+            
+        Returns:
+            格式化后的答案
+        """
+        # 如果答案已经是完整格式（A. xxx），直接返回
+        if re.match(r'^[A-Z][.、]\s', answer):
+            return answer
+        
+        # 如果只是答案内容（xxx），尝试从选项中匹配
+        # 这里简化处理，直接返回原答案
+        # 实际使用时，可以在API层根据选项进行匹配
+        
+        return answer

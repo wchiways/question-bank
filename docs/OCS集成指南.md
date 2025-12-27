@@ -94,6 +94,7 @@ curl "http://localhost:8000/api/v1/query?title=测试&type=single"
     "options": "${options}",
     "type": "${type}"
   },
+  
   "handler": "return (res)=>res.code === 1 ? [undefined, res.data.data] : [undefined, undefined]"
 }
 ```
