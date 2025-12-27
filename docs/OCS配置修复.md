@@ -27,8 +27,7 @@ OCS配置中的handler逻辑有问题：
   "data": {
     "title": "${title}",
     "options": "${options}",
-    "type": "${type}",
-    "api-key": "a702e4dd929b6f38c48d45f15d43d760"
+    "type": "${type}"
   },
   "handler": "return (res)=>res.code === 1 ? res.data.data : undefined"
 }
@@ -191,8 +190,7 @@ fetch('http://localhost:8000/api/v1/query?title=测试&type=single')
   "data": {
     "title": "${title}",
     "options": "${options}",
-    "type": "${type}",
-    "api-key": "a702e4dd929b6f38c48d45f15d43d760"
+    "type": "${type}"
   },
   "handler": "return (res)=>{
     if (res.success && res.data && res.data.code === 1) {
