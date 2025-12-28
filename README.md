@@ -94,6 +94,11 @@ uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 - ReDoc: http://localhost:8000/redoc
 - 健康检查: http://localhost:8000/health
 
+### 部署方式 (Docker)
+
+如果你偏好使用容器化部署，请参考：
+👉 [Docker 部署指南](./docs/Docker部署指南.md)
+
 ## 📁 项目结构
 
 ```
