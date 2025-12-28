@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Card, Modal, Form, Input, Tag, Typography, Tooltip, Space, App } from 'antd';
-import { PlusOutlined, DeleteOutlined, KeyOutlined, CopyOutlined } from '@ant-design/icons';
+import { Table, Button, Card, Modal, Form, Input, message, Tag, Typography, Tooltip, Space } from 'antd';
+import { PlusOutlined, DeleteOutlined, CopyOutlined } from '@ant-design/icons';
 import api from '../utils/api';
 import dayjs from 'dayjs';
 
@@ -21,7 +21,6 @@ const Keys: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const { message } = App.useApp();
 
   const fetchKeys = async () => {
     setLoading(true);
@@ -41,7 +40,6 @@ const Keys: React.FC = () => {
 
   const handleCreate = async (values: any) => {
     try {
-      // Generate a random key if not provided (simple implementation for demo)
       const key = values.key || Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       await api.post('/keys', { key, name: values.name });
       message.success('密钥创建成功');
@@ -83,7 +81,7 @@ const Keys: React.FC = () => {
       key: 'key',
       render: (text: string) => (
         <Space>
-          <code className="bg-gray-100 px-2 py-1 rounded text-blue-600">{text}</code>
+          <code className="bg-gray-100 px-2 py-1 rounded text-blue-600 font-mono">{text}</code>
           <Tooltip title="复制">
              <Button 
                type="text" 

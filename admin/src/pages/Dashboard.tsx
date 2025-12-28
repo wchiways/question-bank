@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Statistic, Row, Col, Typography, App } from 'antd';
+import { Card, Statistic, Row, Col, message } from 'antd';
 import { CloudServerOutlined, ReloadOutlined, RiseOutlined } from '@ant-design/icons';
 import api from '../utils/api';
 import dayjs from 'dayjs';
@@ -22,7 +22,6 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<Stat[]>([]);
   const [loading, setLoading] = useState(false);
-  const { message } = App.useApp();
 
   const fetchStats = async () => {
     setLoading(true);
@@ -63,7 +62,7 @@ const Dashboard: React.FC = () => {
                   value={totalCalls}
                   prefix={<CloudServerOutlined />}
                   // @ts-ignore
-                  styles={{ content: { color: 'black', fontWeight: 'bold' } }}
+                  styles={{ content: { color: 'white', fontWeight: 'bold' } }}
                 />
               </Card>
               <Card className="shadow-sm border-none bg-white rounded-xl">
@@ -78,9 +77,9 @@ const Dashboard: React.FC = () => {
            </div>
            
            <Card title="服务商调用分布" className="shadow-sm border-gray-100 rounded-xl" variant="borderless">
-             <div className="h-[300px] w-full min-h-[300px]" style={{ minHeight: '300px', minWidth: '100%' }}>
-               <ResponsiveContainer width="100%" height={300}>
-                 <BarChart data={stats} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+             <div className="h-[300px] w-full min-h-[300px]">
+               <ResponsiveContainer width="100%" height="100%">
+                 <BarChart data={stats}>
                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
                    <XAxis dataKey="provider_name" axisLine={false} tickLine={false} />
                    <YAxis axisLine={false} tickLine={false} />
@@ -89,7 +88,7 @@ const Dashboard: React.FC = () => {
                       contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                    />
                    <Bar dataKey="call_count" fill="#1677ff" radius={[4, 4, 0, 0]}>
-                      {stats.map((entry, index) => (
+                      {stats.map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                    </Bar>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Card, Typography, Tooltip, App } from 'antd';
-import { ClockCircleOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Table, Tag, Card, Typography, message, Tooltip } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import api from '../utils/api';
 import dayjs from 'dayjs';
 
@@ -21,17 +21,14 @@ interface Log {
 const Logs: React.FC = () => {
   const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 20, total: 0 });
-  const { message } = App.useApp();
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 20 });
 
-  const fetchLogs = async (page: int = 1) => {
+  const fetchLogs = async (page: number = 1) => {
     setLoading(true);
     try {
-      // Offset based pagination
       const skip = (page - 1) * 20;
       const { data } = await api.get(`/logs?skip=${skip}&limit=20`);
       setLogs(data);
-      // Assuming infinite scroll or simple next/prev if total not provided
     } catch (error) {
       message.error('加载日志失败');
     } finally {

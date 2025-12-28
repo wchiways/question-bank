@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Typography, Select, App } from 'antd';
+import { Card, Row, Col, message, Typography, Select } from 'antd';
 import api from '../utils/api';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -15,18 +15,13 @@ interface TrendData {
 const Analysis: React.FC = () => {
   const [trendData, setTrendData] = useState<TrendData[]>([]);
   const [days, setDays] = useState(7);
-  const [loading, setLoading] = useState(false);
-  const { message } = App.useApp();
 
   const fetchTrend = async () => {
-    setLoading(true);
     try {
       const { data } = await api.get(`/analysis/trend?days=${days}`);
       setTrendData(data);
     } catch (error) {
       message.error('加载分析数据失败');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -50,7 +45,7 @@ const Analysis: React.FC = () => {
 
       <Row gutter={[24, 24]}>
         <Col span={24}>
-          <Card title="调用量趋势" className="shadow-sm border-gray-100 rounded-xl" bordered={false}>
+          <Card title="调用量趋势" className="shadow-sm border-gray-100 rounded-xl" variant="borderless">
             <div className="h-[350px] w-full min-h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={trendData}>
@@ -74,7 +69,7 @@ const Analysis: React.FC = () => {
         </Col>
 
         <Col span={24}>
-          <Card title="平均延迟 (ms)" className="shadow-sm border-gray-100 rounded-xl" bordered={false}>
+          <Card title="平均延迟 (ms)" className="shadow-sm border-gray-100 rounded-xl" variant="borderless">
             <div className="h-[350px] w-full min-h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={trendData}>

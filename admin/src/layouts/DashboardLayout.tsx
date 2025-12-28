@@ -8,7 +8,6 @@ import {
   LogoutOutlined,
   UserOutlined,
   SettingOutlined,
-  ExperimentOutlined,
   FileTextOutlined,
   LineChartOutlined,
   KeyOutlined
@@ -91,7 +90,6 @@ const DashboardLayout: React.FC = () => {
   const breadcrumbItems = [
     { title: <Link to="/dashboard">仪表盘</Link> },
     ...pathSnippets.map((_, index) => {
-      const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
       return {
         title: <span className="capitalize">{pathSnippets[index]}</span>,
       };
@@ -121,7 +119,6 @@ const DashboardLayout: React.FC = () => {
           items={menuItems}
           onClick={({ key }) => handleMenuClick(key)}
           className="border-none px-2"
-          itemIcon={(props) => props.icon ? React.cloneElement(props.icon as any, { style: { fontSize: '18px' } }) : null}
         />
       </Sider>
       <Layout>
@@ -157,6 +154,7 @@ const DashboardLayout: React.FC = () => {
             margin: 0,
             padding: 24,
             minHeight: 280,
+            borderRadius: borderRadiusLG
           }}
         >
           <div className="max-w-7xl mx-auto">

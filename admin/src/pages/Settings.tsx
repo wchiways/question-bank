@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, InputNumber, Button, Card, Switch, Divider, Tabs, Typography, Alert, App } from 'antd';
+import { Form, Input, InputNumber, Button, Card, Switch, message, Divider, Tabs, Typography, Alert } from 'antd';
 import { SaveOutlined, SafetyCertificateOutlined, SettingOutlined, CloudOutlined } from '@ant-design/icons';
 import api from '../utils/api';
 
@@ -9,7 +9,6 @@ const Settings: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  const { message } = App.useApp();
 
   useEffect(() => {
     fetchConfig();
@@ -44,6 +43,7 @@ const Settings: React.FC = () => {
       label: (<span><SettingOutlined /> 常规设置</span>),
       children: (
         <div className="max-w-2xl">
+          {/* @ts-ignore */}
           <Divider orientation="left">应用设置</Divider>
           <Form.Item name={['app', 'name']} label="系统名称" rules={[{ required: true }]}>
             <Input />
