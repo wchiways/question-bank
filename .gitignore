@@ -90,3 +90,4 @@ admin/.env
 admin/dist/
 admin/.data/
 admin/nuxt.d.ts
+node_modules

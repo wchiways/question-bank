@@ -10,6 +10,12 @@ from app.services.ai_service import AIAsyncService
 from app.services.query_service import QueryService
 
 
+
+from app.repositories.stats_repository import StatsRepository
+from app.repositories.log_repository import LogRepository
+from app.repositories.api_key_repository import ApiKeyRepository
+
+
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
     """
     获取数据库Session
@@ -61,14 +67,54 @@ async def get_cache_service(
     return CacheService()
 
 
-async def get_ai_service() -> AIAsyncService:
+async def get_stats_repo(
+    session: AsyncSession = Depends(get_db_session)
+) -> StatsRepository:
+    """
+    获取StatsRepository
+
+    Args:
+        session: 数据库会话
+
+    Returns:
+        StatsRepository实例
+    """
+    return StatsRepository(session)
+
+
+async def get_log_repo(
+    session: AsyncSession = Depends(get_db_session)
+) -> LogRepository:
+    """
+    获取LogRepository
+    """
+    return LogRepository(session)
+
+
+async def get_api_key_repo(
+    session: AsyncSession = Depends(get_db_session)
+) -> ApiKeyRepository:
+    """
+    获取ApiKeyRepository
+    """
+    return ApiKeyRepository(session)
+
+
+async def get_ai_service(
+    stats_repo: StatsRepository = Depends(get_stats_repo),
+    log_repo: LogRepository = Depends(get_log_repo)
+) -> AIAsyncService:
     """
     获取AIAsyncService
+
+    Args:
+        stats_repo: 统计仓储
+        log_repo: 日志仓储
 
     Returns:
         AIAsyncService实例
     """
-    return AIAsyncService()
+    return AIAsyncService(stats_repo=stats_repo, log_repo=log_repo)
 
 
 async def get_query_service(

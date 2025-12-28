@@ -1,0 +1,6 @@
+from app.repositories.base import BaseRepository
+from app.repositories.question_repository import QuestionRepository
+from app.repositories.cache_repository import CacheRepository
+from app.repositories.stats_repository import StatsRepository
+from app.repositories.log_repository import LogRepository
+from app.repositories.api_key_repository import ApiKeyRepository

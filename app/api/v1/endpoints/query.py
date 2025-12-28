@@ -1,8 +1,9 @@
 """查询端点 - 题库查询API"""
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from app.schemas.query import QueryRequest, QueryResponse
 from app.services.query_service import QueryService
-from app.api.deps import get_query_service
+from app.api.deps import get_query_service, get_api_key_repo
+from app.repositories.api_key_repository import ApiKeyRepository
 from app.utils.helpers import match_option
 from app.core.logger import get_logger
 
@@ -14,30 +15,26 @@ router = APIRouter()
 @router.get("/query", response_model=QueryResponse, summary="查询问题答案")
 async def query_question(
     title: str,
+    key: str = Query(..., description="API密钥"),
     options: str = "",
     type: str = "single",
-    query_service: QueryService = Depends(get_query_service)
+    query_service: QueryService = Depends(get_query_service),
+    api_key_repo: ApiKeyRepository = Depends(get_api_key_repo)
 ):
     """
     查询问题答案
 
-    查询策略:
-    1. 首先从缓存查找
-    2. 然后从数据库查找
-    3. 最后调用AI服务获取
-
-    Args:
-        title: 问题标题（必填）
-        options: 问题选项
-        type: 题目类型 (single/multiple/judgement/fill)
-        query_service: 查询服务（依赖注入）
-
-    Returns:
-        QueryResponse: 查询响应
-
-    Raises:
-        HTTPException: 请求参数错误时抛出400
+    需要提供有效的 API Key。
     """
+    # 验证 API Key
+    api_key = await api_key_repo.find_by_key(key)
+    if not api_key or not api_key.enabled:
+        logger.warning(f"⚠️ 无效或未启用的 API Key: {key}")
+        raise HTTPException(status_code=403, detail="无效的 API 密钥")
+
+    # 记录使用次数 (异步执行，不阻塞)
+    await api_key_repo.increment_usage(key)
+
     try:
         # 构建请求对象
         request = QueryRequest(

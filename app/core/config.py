@@ -68,6 +68,8 @@ class SecurityConfig(BaseModel):
     """安全配置"""
     secret_key: str
     allowed_hosts: list[str] = ["*"]
+    admin_username: str = "admin"
+    admin_password: str = "admin123"
 
 
 class Settings(BaseModel):

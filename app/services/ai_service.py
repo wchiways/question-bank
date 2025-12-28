@@ -1,11 +1,14 @@
 """AI异步服务 - 封装AI调用逻辑和响应解析"""
 import json
 import re
+import time
 from typing import Optional
 from app.core.config import settings
 from app.core.logger import get_logger
 from app.providers.multi_provider import UniversalAIProvider
 from app.providers.mock_provider import MockAIProvider
+from app.repositories.stats_repository import StatsRepository
+from app.repositories.log_repository import LogRepository
 
 logger = get_logger(__name__)
 
@@ -15,13 +18,22 @@ class AIAsyncService:
     AI异步服务 - 封装AI调用逻辑，支持多个AI服务商
     """
 
-    def __init__(self, provider_name: Optional[str] = None):
+    def __init__(
+        self,
+        stats_repo: Optional[StatsRepository] = None,
+        log_repo: Optional[LogRepository] = None,
+        provider_name: Optional[str] = None
+    ):
         """
         初始化AI服务
 
         Args:
+            stats_repo: 统计仓储
+            log_repo: 日志仓储
             provider_name: 指定的提供商名称，如果不指定则使用配置中的默认提供商
         """
+        self.stats_repo = stats_repo
+        self.log_repo = log_repo
         self.provider_name = provider_name or settings.ai.default_provider
 
         # 获取提供商配置
@@ -60,8 +72,41 @@ class AIAsyncService:
             # 构建提示词
             prompt = self._build_prompt(title, options, question_type)
 
-            # 调用AI
-            response = await self.provider.call(prompt)
+            start_time = time.time()
+            error_msg = None
+            response = ""
+            
+            try:
+                # 调用AI
+                response = await self.provider.call(prompt)
+            except Exception as e:
+                error_msg = str(e)
+                raise e
+            finally:
+                end_time = time.time()
+                latency = int((end_time - start_time) * 1000)
+                
+                # 记录详细日志
+                if self.log_repo:
+                    try:
+                        await self.log_repo.create_log(
+                            provider=self.provider_name,
+                            model=self.provider.get_model_name() if hasattr(self.provider, 'get_model_name') else "unknown",
+                            prompt_length=len(prompt),
+                            response_length=len(response) if response else 0,
+                            latency_ms=latency,
+                            success=error_msg is None,
+                            error_message=error_msg
+                        )
+                    except Exception as e:
+                        logger.error(f"❌ 记录详细日志失败: {e}")
+
+            # 记录统计
+            if self.stats_repo and not error_msg:
+                try:
+                    await self.stats_repo.increment_call_count(self.provider_name)
+                except Exception as e:
+                    logger.error(f"❌ 记录统计失败: {e}")
 
             # 解析响应
             answer = self._parse_response(response)
