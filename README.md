@@ -89,6 +89,7 @@ cp config.example.json config.json
 - **硅基流动** (siliconflow) - 默认，性价比高
 - **阿里百炼** (ali_bailian) - 阿里云大模型平台
 - **智谱AI** (zhipu) - 清华KEG实验室
+- **火山引擎** (volcengine) - 字节跳动大模型平台
 - **Google Studio AI** (google) - Google Gemini
 - **OpenAI** (openai) - GPT系列模型
 
@@ -128,7 +129,16 @@ npm run preview
 
 访问管理后台：http://localhost:5173
 
-默认需要在 `config.json` 中配置管理员API密钥才能访问。
+**默认管理员账户**:
+- 用户名: `admin`
+- 密码: `admin123`
+
+> ⚠️ **安全提示**: 首次使用请在 `config.json` 中修改默认密码！
+
+首次使用建议：
+1. 登录管理后台
+2. 创建API密钥用于认证
+3. 在OCS网课助手配置中使用生成的API密钥
 
 ## 📁 项目结构
 

@@ -203,11 +203,11 @@ const Providers: React.FC = () => {
           </Form.Item>
           
           <Form.Item name="api_url" label="API 地址" rules={[{ required: true }]}>
-            <Input placeholder="https://api.openai.com/v1" />
+            <Input placeholder="例如：https://ark.cn-beijing.volces.com/api/v3/chat/completions" />
           </Form.Item>
           
           <Form.Item name="model" label="模型" rules={[{ required: true }]}>
-            <Input placeholder="gpt-3.5-turbo" />
+            <Input placeholder="例如：ep-202xxxxx (火山引擎) 或 gpt-3.5-turbo" />
           </Form.Item>
 
           <div className="grid grid-cols-2 gap-4">

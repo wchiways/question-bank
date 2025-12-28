@@ -18,6 +18,7 @@ class UniversalAIProvider(BaseAIProvider):
     - SiliconFlow (硅基流动)
     - Ali Bailian (阿里百炼)
     - Zhipu AI (智谱AI)
+    - Volcengine (火山引擎)
     - OpenAI
     - 其他兼容OpenAI API格式的平台
     """
