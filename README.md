@@ -2,6 +2,12 @@
 
 > 基于FastAPI + AsyncIO + SQLModel的高性能题库查询系统
 
+## 作者
+
+**Chiway Wang**
+- Email: wchiway@163.com
+- Blog: [chiway.blog](https://chiway.blog)
+
 ## 🚀 特性
 
 - ✅ **异步架构**: 全链路异步处理，支持高并发

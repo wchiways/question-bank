@@ -4,6 +4,10 @@ version = "2.0.0"
 description = "OCS题库系统 - 基于FastAPI + AsyncIO的高性能题库查询系统"
 readme = "README.md"
 requires-python = ">=3.11"
+authors = [
+    { name = "Chiway Wang", email = "wchiway@163.com" }
+]
+urls = { "Blog" = "https://chiway.blog" }
 dependencies = [
     "fastapi>=0.104.1",
     "uvicorn[standard]>=0.24.0",
