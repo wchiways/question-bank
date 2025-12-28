@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, App as AntdApp } from 'antd';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Providers from './pages/Providers';
@@ -52,11 +52,13 @@ const App: React.FC = () => {
         },
       }}
     >
-      <AuthProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </AuthProvider>
+      <AntdApp>
+        <AuthProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </AuthProvider>
+      </AntdApp>
     </ConfigProvider>
   );
 };

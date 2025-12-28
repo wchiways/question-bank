@@ -14,6 +14,16 @@ from app.models.api_key import ApiKey
 router = APIRouter()
 
 # Schemas
+class LoginRequest(BaseModel):
+    """Login request schema"""
+    username: str
+    password: str
+
+class LoginResponse(BaseModel):
+    """Login response schema"""
+    access_token: str
+    token_type: str = "bearer"
+
 class ProviderResponse(BaseModel):
     default: str
     providers: Dict[str, AIProviderConfig]
@@ -28,6 +38,31 @@ class SystemConfig(BaseModel):
     rate_limit: RateLimitConfig
 
 # Endpoints
+
+@router.post("/login", response_model=LoginResponse)
+async def login(
+    creds: LoginRequest,
+    repo: ApiKeyRepository = Depends(get_api_key_repo)
+):
+    """
+    Admin login endpoint
+    Validates username and password against configured admin credentials
+    """
+    # Check against configured admin credentials
+    if (creds.username == settings.security.admin_username and
+        creds.password == settings.security.admin_password):
+        # Return a special token that can be validated
+        # In production, you should generate a proper JWT token
+        return LoginResponse(
+            access_token=f"admin-{creds.username}",
+            token_type="bearer"
+        )
+    
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid username or password",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
 @router.get("/keys", response_model=List[ApiKey], dependencies=[Depends(verify_api_key)])
 async def get_keys(repo: ApiKeyRepository = Depends(get_api_key_repo)):
