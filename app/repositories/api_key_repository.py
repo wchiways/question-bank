@@ -44,5 +44,5 @@ class ApiKeyRepository(BaseRepository[ApiKey]):
         if api_key:
             api_key.usage_count += 1
             api_key.last_used_at = datetime.utcnow()
-            await self.session.add(api_key)
+            self.session.add(api_key)
             await self.session.commit()

@@ -3,6 +3,7 @@ from typing import AsyncGenerator
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.config import settings
 from app.core.db import async_session_maker
 from app.repositories.question_repository import QuestionRepository
 from app.repositories.cache_repository import CacheRepository
