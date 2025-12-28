@@ -221,3 +221,4 @@ MIT License
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [SQLModel](https://sqlmodel.tiangolo.com/)
 - [uv](https://github.com/astral-sh/uv)
+- 原项目：[ai-ocs-question_bank](https://github.com/Miaozeqiu/ai-ocs-question_bank) by Miaozeqiu
