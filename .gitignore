@@ -81,3 +81,12 @@ CLAUDE.md
 *.tmp
 *.bak
 .cache/
+
+# Nuxt / Admin Panel
+admin/.nuxt/
+admin/.output/
+admin/node_modules/
+admin/.env
+admin/dist/
+admin/.data/
+admin/nuxt.d.ts

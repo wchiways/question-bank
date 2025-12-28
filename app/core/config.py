@@ -100,7 +100,7 @@ def load_config(config_path: str = "config.json") -> Settings:
     # 如果配置文件不存在，创建默认配置
     if not config_file.exists():
         print(f"⚠️  配置文件 {config_path} 不存在，使用默认配置")
-        return Settings()
+        return Settings(security=SecurityConfig(secret_key="default_secret_key"))
 
     with open(config_file, "r", encoding="utf-8") as f:
         config_data = json.load(f)
@@ -108,8 +108,30 @@ def load_config(config_path: str = "config.json") -> Settings:
     return Settings(**config_data)
 
 
+class ConfigManager:
+    """配置管理器 - 支持动态更新和保存"""
+    
+    def __init__(self, config_path: str = "config.json"):
+        self.config_path = Path(config_path)
+        self.config = load_config(config_path)
+        
+    def save(self):
+        """保存当前配置到文件"""
+        with open(self.config_path, "w", encoding="utf-8") as f:
+            # 使用 pydantic 的 model_dump_json 并转换回 dict 以便于美化
+            config_dict = json.loads(self.config.model_dump_json())
+            json.dump(config_dict, f, ensure_ascii=False, indent=2)
+        print(f"✅ 配置文件 {self.config_path} 已更新")
+
+    def reload(self):
+        """重新加载配置文件"""
+        self.config = load_config(str(self.config_path))
+
+
+# 全局配置管理器实例
+config_manager = ConfigManager()
 # 全局配置实例
-settings = load_config()
+settings = config_manager.config
 
 # 便捷属性访问
 APP_NAME = settings.app.name
