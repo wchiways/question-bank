@@ -18,6 +18,7 @@ class UniversalAIProvider(BaseAIProvider):
     - SiliconFlow (硅基流动)
     - Ali Bailian (阿里百炼)
     - Zhipu AI (智谱AI)
+    - Volcengine (火山引擎)
     - OpenAI
     - 其他兼容OpenAI API格式的平台
     """
@@ -93,6 +94,9 @@ class UniversalAIProvider(BaseAIProvider):
             "temperature": self.temperature
         }
 
+        # 如果是火山引擎或其他支持推理的模型，可以考虑在未来加入 reasoning_effort 参数
+        # 这里保持通用性，但解析时会检查推理内容
+
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
@@ -108,15 +112,32 @@ class UniversalAIProvider(BaseAIProvider):
         while retry_count < self.max_retries:
             try:
                 async with httpx.AsyncClient(timeout=self.timeout) as client:
-                    logger.info(f"📤 调用 {self.config.name} (尝试 {retry_count + 1}/{self.max_retries})")
+                    logger.info(f"📤 调用 {self.config.name} ({self.model}) (尝试 {retry_count + 1}/{self.max_retries})")
                     response = await client.post(self.api_url, json=payload, headers=headers)
                     response.raise_for_status()
 
                     result = response.json()
                     if "choices" in result and len(result["choices"]) > 0:
-                        answer = result["choices"][0]["message"]["content"]
-                        logger.info(f"✅ {self.config.name} 调用成功")
-                        return answer
+                        choice = result["choices"][0]
+                        message = choice.get("message", {})
+                        
+                        # 提取内容
+                        content = message.get("content", "")
+                        # 提取推理内容 (火山引擎、DeepSeek等支持)
+                        reasoning = message.get("reasoning_content", "")
+                        
+                        if reasoning:
+                            logger.info(f"🧠 {self.config.name} 思考中: {reasoning[:100]}...")
+                        
+                        # 优先返回正式内容，如果内容为空则返回推理内容
+                        answer = content if content else reasoning
+                        
+                        if answer:
+                            logger.info(f"✅ {self.config.name} 调用成功")
+                            return answer
+                        else:
+                            logger.error(f"❌ API返回内容为空: {result}")
+                            return ""
                     else:
                         logger.error(f"❌ API响应格式异常: {result}")
                         return ""

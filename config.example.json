@@ -10,7 +10,7 @@
     "port": 8000
   },
   "database": {
-    "url": "sqlite+aiosqlite:///./question_bank.db",
+    "url": "sqlite+aiosqlite:////app/data/question_bank.db",
     "echo": false
   },
   "ai": {
@@ -32,7 +32,7 @@
         "enabled": false,
         "api_key": "YOUR_ALI_BAILIAN_API_KEY",
         "api_url": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-        "model": "qwen-plus",
+        "model": "qwen-plus-latest",
         "max_tokens": 512,
         "temperature": 0.1
       },
@@ -60,6 +60,15 @@
         "api_key": "YOUR_OPENAI_API_KEY",
         "api_url": "https://api.openai.com/v1/chat/completions",
         "model": "gpt-3.5-turbo",
+        "max_tokens": 512,
+        "temperature": 0.1
+      },
+      "volcengine": {
+        "name": "火山引擎",
+        "enabled": false,
+        "api_key": "YOUR_VOLCENGINE_API_KEY",
+        "api_url": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+        "model": "doubao-seed-1-6-251015",
         "max_tokens": 512,
         "temperature": 0.1
       }
