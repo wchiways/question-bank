@@ -10,6 +10,7 @@ from app.services.ai_service import AIAsyncService
 from app.models.stats import ProviderStats
 from app.models.log import CallLog
 from app.models.api_key import ApiKey
+from datetime import datetime
 
 router = APIRouter()
 
@@ -23,6 +24,16 @@ class LoginResponse(BaseModel):
     """Login response schema"""
     access_token: str
     token_type: str = "bearer"
+
+class ProviderStatsResponse(BaseModel):
+    """Provider stats response schema"""
+    id: int
+    provider_name: str
+    call_count: int
+    last_called_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
 
 class ProviderResponse(BaseModel):
     default: str
@@ -170,7 +181,8 @@ async def get_trend_analysis(
         for s in stats
     ]
 
-@router.get("/stats", response_model=List[ProviderStats], dependencies=[Depends(verify_api_key)])
+@router.get("/stats", response_model=List[ProviderStatsResponse], dependencies=[Depends(verify_api_key)])
 async def get_stats(stats_repo: StatsRepository = Depends(get_stats_repo)):
     """Get usage statistics"""
-    return await stats_repo.get_all_stats()
+    stats = await stats_repo.get_all_stats()
+    return [ProviderStatsResponse.model_validate(stat) for stat in stats]
