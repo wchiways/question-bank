@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCS题库系统 - 智能答题助手</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span class="logo-text">OCS题库系统</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features" class="nav-link">功能特性</a>
+                    <a href="#demo" class="nav-link">在线演示</a>
+                    <a href="#docs" class="nav-link">API文档</a>
+                    <a href="#install" class="nav-link">快速开始</a>
+                    <a href="https://github.com/wchiways/question-bank" target="_blank" class="nav-link github-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                        GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-text">🚀 v1.2.1 全新发布</span>
+                </div>
+                <h1 class="hero-title">
+                    智能答题助手
+                    <span class="gradient-text">OCS题库系统</span>
+                </h1>
+                <p class="hero-description">
+                    基于 FastAPI + AsyncIO + AI 的高性能题库查询系统
+                    <br>
+                    支持多AI平台、智能匹配、实时查询
+                </p>
+                <div class="hero-actions">
+                    <a href="#install" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        快速开始
+                    </a>
+                    <a href="/docs" class="btn btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        查看文档
+                    </a>
+                    <a href="https://github.com/wchiways/question-bank" target="_blank" class="btn btn-outline">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                        GitHub
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">200+</div>
+                        <div class="stat-label">QPS 并发处理</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">&lt;50ms</div>
+                        <div class="stat-label">平均响应时间</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">6+</div>
+                        <div class="stat-label">AI平台支持</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="code-preview">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="code-title">API 响应示例</span>
+                    </div>
+                    <pre class="code-content"><code>{
+  "code": 1,
+  "data": "A.北京",
+  "msg": "AI回答",
+  "source": "ai",
+  "latency": "45ms"
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能特性 -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">核心功能</h2>
+                <p class="section-subtitle">强大的功能支持，让答题更简单</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon async">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">异步高性能</h3>
+                    <p class="feature-description">
+                        基于 FastAPI 异步架构，支持高并发查询，响应速度提升50倍
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon ai">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">AI智能答题</h3>
+                    <p class="feature-description">
+                        支持多个AI平台，智能匹配答案，准确率更高
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon cache">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">三级缓存</h3>
+                    <p class="feature-description">
+                        内存缓存 + 数据库 + AI服务，智能缓存提升响应速度
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon multi">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">多平台支持</h3>
+                    <p class="feature-description">
+                        支持硅基流动、阿里百炼、智谱AI、火山引擎等多个AI平台
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon admin">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">管理后台</h3>
+                    <p class="feature-description">
+                        React + Ant Design 构建的现代化管理面板
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon security">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">API密钥认证</h3>
+                    <p class="feature-description">
+                        支持API密钥管理，安全可控的访问控制
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 在线演示 -->
+    <section id="demo" class="demo">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">在线演示</h2>
+                <p class="section-subtitle">体验智能答题的便捷</p>
+            </div>
+            <div class="demo-container">
+                <div class="demo-box">
+                    <h3 class="demo-title">试试查询题目</h3>
+                    <form id="queryForm" class="query-form">
+                        <div class="form-group">
+                            <label for="title">题目</label>
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                placeholder="例如：中国的首都是哪里？"
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="options">选项</label>
+                            <input
+                                type="text"
+                                id="options"
+                                name="options"
+                                placeholder="例如：A.北京 B.上海 C.广州 D.深圳"
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="type">题型</label>
+                            <select id="type" name="type">
+                                <option value="single">单选题</option>
+                                <option value="multiple">多选题</option>
+                                <option value="judge">判断题</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+                            查询答案
+                        </button>
+                    </form>
+                    <div id="result" class="result-box" style="display: none;">
+                        <div class="result-header">
+                            <span class="result-label">查询结果</span>
+                            <span class="result-latency"></span>
+                        </div>
+                        <div class="result-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 快速开始 -->
+    <section id="install" class="install">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">快速开始</h2>
+                <p class="section-subtitle">几分钟即可完成部署</p>
+            </div>
+            <div class="install-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">克隆项目</h3>
+                        <div class="code-block">
+                            <code>git clone https://github.com/wchiways/question-bank.git</code>
+                            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">安装依赖</h3>
+                        <div class="code-block">
+                            <code>cd ocs-tiku && uv sync</code>
+                            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">配置AI服务</h3>
+                        <div class="code-block">
+                            <code>cp config.example.json config.json</code>
+                            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        </div>
+                        <p class="step-description">编辑 config.json，填入你的AI服务API密钥</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3 class="step-title">启动服务</h3>
+                        <div class="code-block">
+                            <code>uv run uvicorn app.main:app --reload</code>
+                            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                        </div>
+                        <p class="step-description">访问 http://localhost:8000/docs 查看API文档</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API文档 -->
+    <section id="docs" class="docs">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">API 文档</h2>
+                <p class="section-subtitle">简洁易用的RESTful API</p>
+            </div>
+            <div class="docs-content">
+                <div class="doc-card">
+                    <div class="doc-method get">GET</div>
+                    <div class="doc-info">
+                        <h4 class="doc-endpoint">/api/v1/query</h4>
+                        <p class="doc-description">查询题目答案</p>
+                    </div>
+                    <a href="/docs" class="doc-link">查看详情 →</a>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-method get">GET</div>
+                    <div class="doc-info">
+                        <h4 class="doc-endpoint">/health</h4>
+                        <p class="doc-description">健康检查</p>
+                    </div>
+                    <a href="/docs" class="doc-link">查看详情 →</a>
+                </div>
+                <div class="doc-card">
+                    <div class="doc-method get">GET</div>
+                    <div class="doc-info">
+                        <h4 class="doc-endpoint">/api/v1/admin/*</h4>
+                        <p class="doc-description">管理后台API（需认证）</p>
+                    </div>
+                    <a href="/docs" class="doc-link">查看详情 →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title">关于项目</h4>
+                    <p class="footer-text">
+                        OCS题库系统是基于FastAPI构建的高性能智能答题助手，支持多种AI平台，为OCS网课提供便捷的答题解决方案。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">相关链接</h4>
+                    <ul class="footer-links">
+                        <li><a href="/docs">API文档</a></li>
+                        <li><a href="https://github.com/wchiways/question-bank">GitHub</a></li>
+                        <li><a href="https://chiway.blog">作者博客</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">技术栈</h4>
+                    <ul class="footer-links">
+                        <li>FastAPI</li>
+                        <li>React + Ant Design</li>
+                        <li>SQLModel</li>
+                        <li>SQLite</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Chiway Wang. 基于 MIT 许可证开源。</p>
+                <p>基于 <a href="https://github.com/Miaozeqiu/ai-ocs-question_bank">ai-ocs-question_bank</a> 项目改进</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

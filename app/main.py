@@ -1,7 +1,9 @@
 """FastAPI应用主入口 - 应用初始化和路由注册"""
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.db import init_db, close_db
@@ -42,6 +44,12 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# 挂载静态文件
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+# 配置模板
+templates = Jinja2Templates(directory="app/templates")
+
 # 中间件配置
 app.add_middleware(
     CORSMiddleware,
@@ -71,23 +79,19 @@ async def health_check():
     }
 
 
-# 根路径
+# 根路径 - 首页
 @app.get("/")
-async def root():
+async def root(request: Request):
     """
-    根路径欢迎信息
+    网站首页
+
+    Args:
+        request: FastAPI请求对象
 
     Returns:
-        欢迎信息和文档链接
+        首页HTML
     """
-    return {
-        "message": f"欢迎使用{settings.app.name}",
-        "version": settings.app.version,
-        "docs": "/docs",
-        "redoc": "/redoc",
-        "health": "/health",
-        "api": settings.app.api_v1_prefix
-    }
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 # 注册路由
