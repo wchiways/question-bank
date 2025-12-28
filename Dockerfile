@@ -1,7 +1,7 @@
 # Stage 1: Build Frontend
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app/admin
-COPY admin/package.json admin/package-lock.json ./
+COPY admin/package*.json ./
 RUN npm ci
 COPY admin/ ./
 RUN npm run build
@@ -10,10 +10,14 @@ RUN npm run build
 FROM python:3.11-slim
 WORKDIR /app
 
-# Install dependencies
-COPY pyproject.toml .
-# Install uv for faster package management
-RUN pip install uv && uv pip install --system -e .
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY pyproject.toml ./
+RUN pip install --no-cache-dir -e .
 
 # Copy backend code
 COPY app ./app
@@ -28,6 +32,10 @@ RUN mkdir -p logs
 
 # Expose port
 EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"
 
 # Start command
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
