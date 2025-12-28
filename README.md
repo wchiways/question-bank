@@ -200,7 +200,8 @@ curl "http://localhost:8000/api/v1/query?title=中国的首都是哪里？&optio
     "data": {
         "title": "${title}",
         "options": "${options}",
-        "type": "${type}"
+        "type": "${type}",
+        "key":"生成的密钥",
     },
     "handler": "return (res)=>res.code === 0 ? [undefined, undefined] : [undefined, res.data]"
 }
