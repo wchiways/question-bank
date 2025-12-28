@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  ocs-tiku:
+    build: .
+    image: ocs-tiku:latest
+    container_name: ocs-tiku
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config.json:/app/config.json
+      - ./question_bank.db:/app/question_bank.db
+      - ./logs:/app/logs
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai

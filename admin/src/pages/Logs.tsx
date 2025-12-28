@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Card, Typography, message, Tooltip } from 'antd';
+import { Table, Tag, Card, Typography, Tooltip, App } from 'antd';
 import { ClockCircleOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import api from '../utils/api';
 import dayjs from 'dayjs';
@@ -21,7 +21,8 @@ interface Log {
 const Logs: React.FC = () => {
   const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 20, total: 0 }); // Note: API needs total for real pagination, currently simpler
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 20, total: 0 });
+  const { message } = App.useApp();
 
   const fetchLogs = async (page: int = 1) => {
     setLoading(true);

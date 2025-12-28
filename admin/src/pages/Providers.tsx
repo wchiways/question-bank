@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Tag, Space, Card, Modal, Form, Input, InputNumber, Switch, message, Tooltip, Badge } from 'antd';
+import { Table, Button, Tag, Space, Card, Modal, Form, Input, InputNumber, Switch, Tooltip, Badge, App } from 'antd';
 import { PlusOutlined, DeleteOutlined, StarOutlined, StarFilled, EditOutlined } from '@ant-design/icons';
 import api from '../utils/api';
 
@@ -20,6 +20,7 @@ const Providers: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProvider, setEditingProvider] = useState<string | null>(null);
   const [form] = Form.useForm();
+  const { message } = App.useApp();
 
   const fetchProviders = async () => {
     setLoading(true);

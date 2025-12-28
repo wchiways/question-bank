@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Statistic, Row, Col, message, Typography, Tooltip } from 'antd';
-import { CloudServerOutlined, ReloadOutlined, InfoCircleOutlined, RiseOutlined } from '@ant-design/icons';
+import { Card, Statistic, Row, Col, Typography, App } from 'antd';
+import { CloudServerOutlined, ReloadOutlined, RiseOutlined } from '@ant-design/icons';
 import api from '../utils/api';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -9,7 +9,7 @@ import 'dayjs/locale/zh-cn';
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface Stat {
   provider_name: string;
@@ -22,6 +22,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<Stat[]>([]);
   const [loading, setLoading] = useState(false);
+  const { message } = App.useApp();
 
   const fetchStats = async () => {
     setLoading(true);
@@ -77,9 +78,9 @@ const Dashboard: React.FC = () => {
            </div>
            
            <Card title="服务商调用分布" className="shadow-sm border-gray-100 rounded-xl" variant="borderless">
-             <div className="h-[300px] w-full min-h-[300px]">
-               <ResponsiveContainer width="100%" height="100%">
-                 <BarChart data={stats}>
+             <div className="h-[300px] w-full min-h-[300px]" style={{ minHeight: '300px', minWidth: '100%' }}>
+               <ResponsiveContainer width="100%" height={300}>
+                 <BarChart data={stats} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
                    <XAxis dataKey="provider_name" axisLine={false} tickLine={false} />
                    <YAxis axisLine={false} tickLine={false} />

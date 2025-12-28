@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, message, Typography, Select } from 'antd';
+import { Card, Row, Col, Typography, Select, App } from 'antd';
 import api from '../utils/api';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 
@@ -16,6 +16,7 @@ const Analysis: React.FC = () => {
   const [trendData, setTrendData] = useState<TrendData[]>([]);
   const [days, setDays] = useState(7);
   const [loading, setLoading] = useState(false);
+  const { message } = App.useApp();
 
   const fetchTrend = async () => {
     setLoading(true);

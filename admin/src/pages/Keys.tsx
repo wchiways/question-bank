@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Card, Modal, Form, Input, message, Tag, Typography, Tooltip, Space } from 'antd';
+import { Table, Button, Card, Modal, Form, Input, Tag, Typography, Tooltip, Space, App } from 'antd';
 import { PlusOutlined, DeleteOutlined, KeyOutlined, CopyOutlined } from '@ant-design/icons';
 import api from '../utils/api';
 import dayjs from 'dayjs';
@@ -21,6 +21,7 @@ const Keys: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const { message } = App.useApp();
 
   const fetchKeys = async () => {
     setLoading(true);
