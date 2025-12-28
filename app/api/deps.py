@@ -149,14 +149,18 @@ async def verify_api_key(
     api_key_repo: ApiKeyRepository = Depends(get_api_key_repo)
 ) -> str:
     """
-    验证API密钥
+    验证API密钥或Admin Token
+
+    支持两种认证方式：
+    1. 数据库中的API密钥
+    2. Admin登录返回的临时token (格式: admin-{username})
 
     Args:
         credentials: HTTP Bearer token凭据
         api_key_repo: API密钥仓储
 
     Returns:
-        str: 验证通过的API密钥
+        str: 验证通过的API密钥或token
 
     Raises:
         HTTPException: 如果认证失败
@@ -168,12 +172,27 @@ async def verify_api_key(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    api_key = credentials.credentials
+    token = credentials.credentials
+
+    # 检查是否是admin登录token (格式: admin-{username})
+    if token.startswith("admin-"):
+        username = token.replace("admin-", "")
+        # 验证是否是配置的admin用户
+        if username == settings.security.admin_username:
+            logger.info(f"Admin用户验证成功: {username}")
+            return token
+        else:
+            logger.warning(f"无效的admin token尝试: {token}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="无效的admin凭证",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
     # 查询API密钥是否存在
-    key_record = await api_key_repo.find_by_key(api_key)
+    key_record = await api_key_repo.find_by_key(token)
     if not key_record:
-        logger.warning(f"无效的API密钥尝试: {api_key[:10]}...")
+        logger.warning(f"无效的API密钥尝试: {token[:10]}...")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="无效的API密钥",
@@ -182,9 +201,9 @@ async def verify_api_key(
 
     # 更新使用统计
     try:
-        await api_key_repo.increment_usage(api_key)
+        await api_key_repo.increment_usage(token)
     except Exception as e:
         logger.error(f"更新API密钥使用统计失败: {e}")
 
     logger.info(f"API密钥验证成功: {key_record.name}")
-    return api_key
+    return token
