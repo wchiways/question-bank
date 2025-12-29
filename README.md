@@ -1,14 +1,13 @@
 # OCS题库系统 - FastAPI版本
 
-> 基于FastAPI + AsyncIO + SQLModel的高性能题库查询系统
+[![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.127+-green.svg)](https://fastapi.tiangolo.com)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-## 作者
+> 基于 FastAPI + AsyncIO + SQLModel 的高性能题库查询系统
 
-**Chiway Wang**
-- Email: wchiway@163.com
-- Blog: [chiway.blog](https://chiway.blog)
-
-## 🚀 特性
+## ✨ 特性
 
 - ✅ **异步架构**: 全链路异步处理，支持高并发
 - ✅ **类型安全**: 100%类型注解，Pydantic数据验证
@@ -18,7 +17,24 @@
 - ✅ **智能重试**: AI调用失败自动重试
 - ✅ **多AI平台**: 支持硅基流动、阿里百炼、智谱AI、Google、OpenAI等多个平台
 
+## 📖 文档导航
+
+- [安装指南 (docs/INSTALL.md)](./docs/INSTALL.md) - 详细的安装和配置步骤
+- [Docker 部署 (docs/DOCKER.md)](./docs/DOCKER.md) - 容器化部署指南
+- [API 文档 (docs/API.md)](./docs/API.md) - 完整的 API 接口文档和使用示例
+- [开发指南 (docs/DEVELOPMENT.md)](./docs/DEVELOPMENT.md) - 项目架构、开发流程和编码规范
+
+## 👤 作者
+
+**Chiway Wang**
+- Email: [wchiway@163.com](mailto:wchiway@163.com)
+- Blog: [chiway.blog](https://chiway.blog)
+
 ## 🛠️ 技术栈
+
+![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.127+-green?logo=fastapi)
+![SQLModel](https://img.shields.io/badge/SQLModel-Latest-orange?logo=sqlalchemy)
 
 - **Web框架**: FastAPI 0.127+
 - **ORM**: SQLModel (Pydantic + SQLAlchemy)
@@ -37,6 +53,10 @@
 ### 安装
 
 ```bash
+# 克隆项目
+git clone https://github.com/wchiways/question-bank.git
+cd ocs-tiku
+
 # 使用uv (推荐)
 uv sync
 
@@ -97,7 +117,12 @@ uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ### 部署方式 (Docker)
 
 如果你偏好使用容器化部署，请参考：
-👉 [DOCKER.md](./DOCKER.md)
+👉 [Docker 部署指南 (docs/DOCKER.md)](./docs/DOCKER.md)
+
+```bash
+# 快速启动
+docker compose up -d --build
+```
 
 ## 📁 项目结构
 
@@ -184,6 +209,8 @@ uv run pytest tests/ --cov=app --cov-report=html
 | 响应时间 | ~100ms | <50ms | **2倍** |
 | 代码量 | 239行 | 减少40% | 更简洁 |
 
+![Benchmark](https://img.shields.io/badge/Benchmark-50x%20Faster-brightgreen)
+
 ## 🔄 从Flask迁移
 
 旧版本（Flask）保留在Git历史中。新版本（FastAPI）在`development`分支开发。
@@ -215,11 +242,29 @@ uv run ruff check app/
 
 ## 🤝 贡献
 
-欢迎提交Issue和Pull Request！
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'feat: add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启 Pull Request
 
 ## 📄 许可证
 
-MIT License
+本项目采用 MIT 许可证 - 详见 [LICENSE](./LICENSE) 文件
+
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+
+## 🔗 相关链接
+
+- [FastAPI 文档](https://fastapi.tiangolo.com/)
+- [SQLModel 文档](https://sqlmodel.tiangolo.com/)
+- [uv 包管理器](https://github.com/astral-sh/uv)
+
+## 🌟 Star History
+
+如果这个项目对你有帮助，请给它一个 Star！
 
 ## 🎉 致谢
 
