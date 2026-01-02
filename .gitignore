@@ -90,3 +90,7 @@ admin/.env
 admin/dist/
 admin/.data/
 admin/nuxt.d.ts
+
+#docs
+AdminPanel_Plan.md
+AIProviderConfig_Plan.md

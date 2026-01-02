@@ -23,11 +23,25 @@ async def lifespan(app: FastAPI):
     await init_db()
     logger.info("✅ 数据库初始化完成")
 
+    # 初始化Redis连接（如果启用）
+    if settings.cache.type.lower() == "redis":
+        from app.core.redis import redis_manager
+        await redis_manager.connect()
+        if await redis_manager.ping():
+            logger.info("✅ Redis缓存已启用")
+        else:
+            logger.info("⚠️  Redis连接失败，将使用内存缓存")
+
     yield
 
     # 关闭时执行
     logger.info("🛑 应用关闭中...")
     await close_db()
+
+    # 关闭Redis连接
+    if settings.cache.type.lower() == "redis":
+        from app.core.redis import redis_manager
+        await redis_manager.close()
     logger.info("✅ 数据库连接已关闭")
 
 

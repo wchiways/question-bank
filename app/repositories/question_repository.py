@@ -95,3 +95,71 @@ class QuestionRepository(BaseRepository[Question]):
             type=question_type
         )
         return await self.create(question_obj)
+
+    async def get_paginated(
+        self,
+        skip: int = 0,
+        limit: int = 20,
+        keyword: Optional[str] = None,
+        question_type: Optional[str] = None
+    ) -> dict:
+        """
+        获取分页题目列表（性能优化版本）
+
+        Args:
+            skip: 跳过的记录数
+            limit: 返回的记录数限制
+            keyword: 搜索关键词
+            question_type: 题目类型筛选
+
+        Returns:
+            包含items、total、page、page_size的字典
+        """
+        from sqlmodel import func
+
+        # 性能优化：只选择必要的字段
+        statement = select(Question.id, Question.question, Question.answer,
+                          Question.options, Question.type, Question.created_at)
+
+        # 性能优化：使用更高效的count查询
+        count_statement = select(func.count(Question.id))
+
+        # 应用过滤条件
+        if keyword:
+            # 性能优化：使用索引友好的like查询
+            statement = statement.where(Question.question.like(f"%{keyword}%"))
+            count_statement = count_statement.where(Question.question.like(f"%{keyword}%"))
+
+        if question_type:
+            statement = statement.where(Question.type == question_type)
+            count_statement = count_statement.where(Question.type == question_type)
+
+        # 性能优化：先执行count查询（更快）
+        total_result = await self.session.execute(count_statement)
+        total = total_result.scalar_one()
+
+        # 性能优化：添加排序以确保结果一致性
+        statement = statement.order_by(Question.id.desc())
+
+        # 分页查询
+        statement = statement.offset(skip).limit(limit)
+        result = await self.session.execute(statement)
+
+        # 性能优化：手动构建对象（避免完整的ORM开销）
+        items = []
+        for row in result.all():
+            items.append(Question(
+                id=row[0],
+                question=row[1],
+                answer=row[2],
+                options=row[3],
+                type=row[4],
+                created_at=row[5]
+            ))
+
+        return {
+            "items": items,
+            "total": total,
+            "page": (skip // limit) + 1 if limit > 0 else 1,
+            "page_size": limit
+        }

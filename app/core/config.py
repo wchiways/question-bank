@@ -1,5 +1,6 @@
 """应用配置管理 - 从config.json读取配置"""
 import json
+import os
 from pathlib import Path
 from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field
@@ -46,9 +47,15 @@ class DatabaseConfig(BaseModel):
 
 class CacheConfig(BaseModel):
     """缓存配置"""
-    type: str = "memory"
-    ttl: int = 3600
+    type: str = "memory"  # memory 或 redis
+    ttl: int = 3600  # 缓存过期时间（秒）
     redis_url: Optional[str] = None
+
+    # Redis详细配置
+    host: str = "localhost"
+    port: int = 6379
+    db: int = 0
+    password: Optional[str] = None
 
 
 class RateLimitConfig(BaseModel):
@@ -100,12 +107,30 @@ def load_config(config_path: str = "config.json") -> Settings:
     # 如果配置文件不存在，创建默认配置
     if not config_file.exists():
         print(f"⚠️  配置文件 {config_path} 不存在，使用默认配置")
-        return Settings(security=SecurityConfig(secret_key="default_secret_key"))
+        settings = Settings(security=SecurityConfig(secret_key=os.getenv("SECRET_KEY", "default_secret_key")))
+    else:
+        with open(config_file, "r", encoding="utf-8") as f:
+            config_data = json.load(f)
+        settings = Settings(**config_data)
+    
+    # 环境变量覆盖 (便于 Docker 部署)
+    if os.getenv("DATABASE_URL"):
+        settings.database.url = os.getenv("DATABASE_URL")
+    
+    if os.getenv("REDIS_HOST"):
+        settings.cache.host = os.getenv("REDIS_HOST")
+        settings.cache.type = "redis"  # 如果设置了 REDIS_HOST，自动切换到 redis 模式
+    
+    if os.getenv("REDIS_PORT"):
+        settings.cache.port = int(os.getenv("REDIS_PORT"))
+        
+    if os.getenv("REDIS_PASSWORD"):
+        settings.cache.password = os.getenv("REDIS_PASSWORD")
+        
+    if os.getenv("SECRET_KEY"):
+        settings.security.secret_key = os.getenv("SECRET_KEY")
 
-    with open(config_file, "r", encoding="utf-8") as f:
-        config_data = json.load(f)
-
-    return Settings(**config_data)
+    return settings
 
 
 class ConfigManager:

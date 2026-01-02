@@ -4,6 +4,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import async_session_maker
 from app.repositories.question_repository import QuestionRepository
+from app.repositories.user_repository import UserRepository
 from app.repositories.cache_repository import CacheRepository
 from app.services.cache_service import CacheService
 from app.services.ai_service import AIAsyncService
@@ -34,6 +35,21 @@ async def get_question_repo(
         QuestionRepository实例
     """
     return QuestionRepository(session)
+
+
+async def get_user_repo(
+    session: AsyncSession = Depends(get_db_session)
+) -> UserRepository:
+    """
+    获取UserRepository
+
+    Args:
+        session: 数据库会话
+
+    Returns:
+        UserRepository实例
+    """
+    return UserRepository(session)
 
 
 async def get_cache_repo() -> CacheRepository:

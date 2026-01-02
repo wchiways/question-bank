@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+build
+.git
+.gitignore
+.dockerignore
+README.md
+LICENSE
+.vscode
+.env*
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

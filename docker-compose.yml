@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  # Redis 缓存服务
+  redis:
+    image: redis:alpine
+    container_name: ocs-tiku-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ocs-network
+
+  # 后端 API 服务
   ocs-tiku:
     build: .
     image: ocs-tiku:latest
@@ -11,6 +24,36 @@ services:
       - ./config.json:/app/config.json
       - ./data:/app/data
       - ./logs:/app/logs
+    depends_on:
+      - redis
     restart: unless-stopped
     environment:
       - TZ=Asia/Shanghai
+      - REDIS_HOST=redis
+    networks:
+      - ocs-network
+
+  # 前端 Web 界面
+  ocs-tiku-web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    image: ocs-tiku-web:latest
+    container_name: ocs-tiku-web
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_URL=http://ocs-tiku:8000
+      - NODE_ENV=production
+    depends_on:
+      - ocs-tiku
+    restart: unless-stopped
+    networks:
+      - ocs-network
+
+networks:
+  ocs-network:
+    driver: bridge
+
+volumes:
+  redis_data:
