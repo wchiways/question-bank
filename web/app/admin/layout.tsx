@@ -1,27 +1,34 @@
-'use client';
+"use client";
 
-import React from 'react';
-import dynamic from 'next/dynamic';
+import React from "react";
+import dynamic from "next/dynamic";
 import {
   BookOutlined,
   BarChartOutlined,
   SettingOutlined,
   DatabaseOutlined,
   DashboardOutlined,
-  ThunderboltOutlined
-} from '@ant-design/icons';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { ConfigProvider, Spin, App } from 'antd';
-import zhCN from 'antd/locale/zh_CN';
+  ThunderboltOutlined,
+} from "@ant-design/icons";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider, Spin, App } from "antd";
+import zhCN from "antd/locale/zh_CN";
 
 const ProLayout = dynamic(
-  () => import('@ant-design/pro-components').then((mod) => mod.ProLayout),
+  () => import("@ant-design/pro-components").then((mod) => mod.ProLayout),
   {
     ssr: false,
     loading: () => (
-      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Spin size="large" />
       </div>
     ),
@@ -30,47 +37,74 @@ const ProLayout = dynamic(
 
 const menuData = [
   {
-    path: '/admin',
-    name: '控制台',
+    path: "/admin",
+    name: "控制台",
     icon: <DashboardOutlined />,
   },
   {
-    path: '/admin/questions',
-    name: '题库管理',
+    path: "/admin/questions",
+    name: "题库管理",
     icon: <BookOutlined />,
   },
   {
-    path: '/admin/ai-providers',
-    name: 'AI 服务商',
+    path: "/admin/ai-providers",
+    name: "AI 服务商",
     icon: <ThunderboltOutlined />,
   },
   {
-    path: '/admin/stats',
-    name: '统计分析',
+    path: "/admin/stats",
+    name: "统计分析",
     icon: <BarChartOutlined />,
   },
   {
-    path: '/admin/config',
-    name: '系统配置',
+    path: "/admin/config",
+    name: "系统配置",
     icon: <SettingOutlined />,
   },
   {
-    path: '/admin/database',
-    name: '数据库管理',
+    path: "/admin/database",
+    name: "数据库管理",
     icon: <DatabaseOutlined />,
   },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
 
   return (
     <AntdRegistry>
-      <ConfigProvider locale={zhCN}>
+      <ConfigProvider
+        locale={zhCN}
+        theme={{
+          token: {
+            colorPrimary: '#1890ff',
+            borderRadius: 6,
+            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          },
+          components: {
+            Layout: {
+              headerBg: '#ffffff',
+              bodyBg: '#f5f7fa',
+              triggerBg: '#1890ff',
+            },
+            Menu: {
+              itemBorderRadius: 6,
+              itemHoverBg: '#e6f7ff',
+              itemSelectedBg: '#bae7ff',
+            }
+          }
+        }}
+      >
         <App>
           <div
+            className="admin-layout"
             style={{
-              height: '100vh',
+              height: "100vh",
+              backgroundColor: "var(--admin-bg)",
             }}
           >
             <ProLayout
@@ -81,13 +115,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               }}
               menuDataRender={() => menuData}
               menuItemRender={(item, dom) => (
-                <Link href={item.path || '/admin'}>{dom}</Link>
+                <Link href={item.path || "/admin"}>{dom}</Link>
               )}
               layout="mix"
               fixedHeader
               fixSiderbar
+              style={{
+                backgroundColor: "var(--admin-bg)",
+              }}
             >
-              {children}
+              <div style={{ padding: '16px' }}>
+                {children}
+              </div>
             </ProLayout>
           </div>
         </App>

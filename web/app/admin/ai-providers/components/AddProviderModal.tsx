@@ -1,11 +1,14 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import { Modal, Form, Input, Slider, Tabs, Switch } from 'antd';
+import React, { useEffect } from "react";
+import { Modal, Form, Input, Slider, Tabs, Switch } from "antd";
+import { AIProvider } from "../../types";
 
 interface Props {
   visible: boolean;
-  onSubmit: (values: any) => Promise<boolean>;
+  onSubmit: (
+    values: Omit<AIProvider, "key"> & { key: string },
+  ) => Promise<boolean>;
   onCancel: () => void;
 }
 
@@ -63,18 +66,18 @@ export const AddProviderModal: React.FC<Props> = ({
         <Tabs
           items={[
             {
-              key: 'basic',
-              label: '基础配置',
+              key: "basic",
+              label: "基础配置",
               children: (
                 <>
                   <Form.Item
                     label="服务商标识符"
                     name="key"
                     rules={[
-                      { required: true, message: '请输入服务商标识符' },
+                      { required: true, message: "请输入服务商标识符" },
                       {
                         pattern: /^[a-z0-9_]+$/,
-                        message: '只能包含小写字母、数字和下划线'
+                        message: "只能包含小写字母、数字和下划线",
                       },
                     ]}
                     extra="用于系统内部识别，例如: openai, anthropic"
@@ -85,7 +88,7 @@ export const AddProviderModal: React.FC<Props> = ({
                   <Form.Item
                     label="服务商名称"
                     name="name"
-                    rules={[{ required: true, message: '请输入服务商名称' }]}
+                    rules={[{ required: true, message: "请输入服务商名称" }]}
                     extra="显示名称，例如: OpenAI、Claude"
                   >
                     <Input placeholder="OpenAI" />
@@ -94,19 +97,16 @@ export const AddProviderModal: React.FC<Props> = ({
                   <Form.Item
                     label="API Key"
                     name="api_key"
-                    rules={[{ required: true, message: '请输入 API Key' }]}
+                    rules={[{ required: true, message: "请输入 API Key" }]}
                     extra="您的密钥将被安全加密存储"
                   >
-                    <Input.Password
-                      placeholder="sk-..."
-                      visibilityToggle
-                    />
+                    <Input.Password placeholder="sk-..." visibilityToggle />
                   </Form.Item>
 
                   <Form.Item
                     label="API 地址"
                     name="api_url"
-                    rules={[{ required: true, message: '请输入 API 地址' }]}
+                    rules={[{ required: true, message: "请输入 API 地址" }]}
                     extra="完整的 API 端点地址"
                   >
                     <Input placeholder="https://api.openai.com/v1/chat/completions" />
@@ -123,14 +123,14 @@ export const AddProviderModal: React.FC<Props> = ({
               ),
             },
             {
-              key: 'advanced',
-              label: '高级参数',
+              key: "advanced",
+              label: "高级参数",
               children: (
                 <>
                   <Form.Item
                     label="模型名称"
                     name="model"
-                    rules={[{ required: true, message: '请输入模型名称' }]}
+                    rules={[{ required: true, message: "请输入模型名称" }]}
                     extra="请确保服务商支持该模型"
                   >
                     <Input placeholder="gpt-3.5-turbo" />
@@ -146,10 +146,10 @@ export const AddProviderModal: React.FC<Props> = ({
                       max={8000}
                       step={100}
                       marks={{
-                        100: '100',
-                        1000: '1K',
-                        4000: '4K',
-                        8000: '8K',
+                        100: "100",
+                        1000: "1K",
+                        4000: "4K",
+                        8000: "8K",
                       }}
                     />
                   </Form.Item>
@@ -164,10 +164,10 @@ export const AddProviderModal: React.FC<Props> = ({
                       max={2}
                       step={0.1}
                       marks={{
-                        0: '精确',
-                        0.7: '平衡',
-                        1.5: '创意',
-                        2: '随机',
+                        0: "精确",
+                        0.7: "平衡",
+                        1.5: "创意",
+                        2: "随机",
                       }}
                     />
                   </Form.Item>

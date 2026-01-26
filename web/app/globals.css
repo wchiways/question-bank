@@ -3,6 +3,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Admin Panel Custom Colors */
+  --admin-bg: #f5f7fa;
+  --admin-card-bg: #ffffff;
+  --admin-border: #e4e7ed;
+  --admin-text-primary: #1f2d3d;
+  --admin-text-secondary: #3c4858;
+  --admin-text-tertiary: #8492a6;
+  --admin-primary: #1890ff;
+  --admin-success: #52c41a;
+  --admin-warning: #faad14;
+  --admin-error: #f5222d;
+  --admin-box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 @theme inline {
@@ -10,12 +22,30 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* Admin Panel Custom Colors */
+  --color-admin-bg: var(--admin-bg);
+  --color-admin-card-bg: var(--admin-card-bg);
+  --color-admin-border: var(--admin-border);
+  --color-admin-text-primary: var(--admin-text-primary);
+  --color-admin-text-secondary: var(--admin-text-secondary);
+  --color-admin-text-tertiary: var(--admin-text-tertiary);
+  --color-admin-primary: var(--admin-primary);
+  --color-admin-success: var(--admin-success);
+  --color-admin-warning: var(--admin-warning);
+  --color-admin-error: var(--admin-error);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    /* Dark Mode Admin Colors */
+    --admin-bg: #0f1419;
+    --admin-card-bg: #1a222d;
+    --admin-border: #2d3748;
+    --admin-text-primary: #e2e8f0;
+    --admin-text-secondary: #cbd5e0;
+    --admin-text-tertiary: #a0aec0;
   }
 }
 
@@ -23,4 +53,44 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Admin Panel Specific Styles */
+.admin-layout {
+  background-color: var(--admin-bg) !important;
+}
+
+.admin-card {
+  background: var(--admin-card-bg) !important;
+  border: 1px solid var(--admin-border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--admin-box-shadow) !important;
+}
+
+.admin-text-primary {
+  color: var(--admin-text-primary) !important;
+}
+
+.admin-text-secondary {
+  color: var(--admin-text-secondary) !important;
+}
+
+.admin-text-tertiary {
+  color: var(--admin-text-tertiary) !important;
+}
+
+.admin-primary {
+  color: var(--admin-primary) !important;
+}
+
+.admin-success {
+  color: var(--admin-success) !important;
+}
+
+.admin-warning {
+  color: var(--admin-warning) !important;
+}
+
+.admin-error {
+  color: var(--admin-error) !important;
 }

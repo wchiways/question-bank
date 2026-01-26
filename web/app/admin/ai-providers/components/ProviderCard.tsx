@@ -1,21 +1,24 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Card, Tag, Space, Button, Switch, Row, Col, Typography, Popconfirm } from 'antd';
+import React from "react";
 import {
-  ApiOutlined,
-  EditOutlined,
-  ThunderboltOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  WarningOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
+  Card,
+  Tag,
+  Space,
+  Button,
+  Switch,
+  Row,
+  Col,
+  Typography,
+  Popconfirm,
+} from "antd";
+import { ApiOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { AIProvider } from "../../types";
 
 const { Text } = Typography;
 
 interface Props {
-  provider: any;
+  provider: AIProvider;
   providerKey: string;
   isDefault: boolean;
   isTesting: boolean;
@@ -26,7 +29,7 @@ interface Props {
   onDelete: () => void;
 }
 
-export const ProviderCard: React.FC<Props> = ({
+const ProviderCard = (React.FC<Props> = ({
   provider,
   providerKey,
   isDefault,
@@ -41,65 +44,65 @@ export const ProviderCard: React.FC<Props> = ({
     // 定义关键词到emoji的映射
     const keywordEmojis: Record<string, string> = {
       // AI/智能相关
-      'open': '🤖',
-      'openai': '🤖',
-      'claude': '🧠',
-      'anthropic': '🧠',
-      'gemini': '✨',
-      'gpt': '💬',
-      'ai': '🤖',
-      '智能': '🧠',
+      open: "🤖",
+      openai: "🤖",
+      claude: "🧠",
+      anthropic: "🧠",
+      gemini: "✨",
+      gpt: "💬",
+      ai: "🤖",
+      智能: "🧠",
 
       // 云服务相关
-      'cloud': '☁️',
-      '云': '☁️',
-      'ali': '🟠',
-      'aliyun': '🟠',
-      'ali_bailian': '🟠',
-      'bailian': '🟠',
-      'tencent': '🟢',
-      'huawei': '🔴',
-      'baidu': '🔵',
+      cloud: "☁️",
+      云: "☁️",
+      ali: "🟠",
+      aliyun: "🟠",
+      ali_bailian: "🟠",
+      bailian: "🟠",
+      tencent: "🟢",
+      huawei: "🔴",
+      baidu: "🔵",
 
       // 搜索/数据相关
-      'google': '🔍',
-      'search': '🔍',
-      'data': '📊',
-      '数据库': '🗄️',
+      google: "🔍",
+      search: "🔍",
+      data: "📊",
+      数据库: "🗄️",
 
       // 火焰/性能相关
-      'fire': '🔥',
-      'volcengine': '🔥',
-      'volcano': '🔥',
-      '火山': '🔥',
-      'speed': '⚡',
+      fire: "🔥",
+      volcengine: "🔥",
+      volcano: "🔥",
+      火山: "🔥",
+      speed: "⚡",
 
       // 珠宝/品质相关
-      'silicon': '💎',
-      'siliconflow': '💎',
-      'flow': '💧',
-      'stream': '💧',
+      silicon: "💎",
+      siliconflow: "💎",
+      flow: "💧",
+      stream: "💧",
 
       // 智谱相关
-      'zhipu': '🎯',
-      'chatglm': '💬',
-      'glm': '💬',
-      '智谱': '🎯',
+      zhipu: "🎯",
+      chatglm: "💬",
+      glm: "💬",
+      智谱: "🎯",
 
       // 其他常见服务商
-      'azure': '🔷',
-      'microsoft': '🪟',
-      'aws': '🟠',
-      'amazon': '📦',
-      'meta': '🔵',
-      'facebook': '🔵',
-      'twitter': '🐦',
-      'x': '❌',
+      azure: "🔷",
+      microsoft: "🪟",
+      aws: "🟠",
+      amazon: "📦",
+      meta: "🔵",
+      facebook: "🔵",
+      twitter: "🐦",
+      x: "❌",
 
       // 通用图标
-      'api': '🔌',
-      'service': '⚙️',
-      'provider': '🏢',
+      api: "🔌",
+      service: "⚙️",
+      provider: "🏢",
     };
 
     // 1. 优先匹配完整的 key
@@ -126,24 +129,44 @@ export const ProviderCard: React.FC<Props> = ({
     }
 
     // 5. 都匹配不到，使用通用图标
-    return '⚙️';
+    return "⚙️";
   };
 
   const getStatusTags = () => {
     const tags = [];
 
     if (isDefault) {
-      tags.push(<Tag color="blue" key="default">默认</Tag>);
+      tags.push(
+        <Tag color="blue" key="default">
+          默认
+        </Tag>,
+      );
     }
 
     if (provider.enabled) {
-      tags.push(<Tag color="green" key="enabled">已启用</Tag>);
+      tags.push(
+        <Tag color="green" key="enabled">
+          已启用
+        </Tag>,
+      );
     } else {
-      tags.push(<Tag color="red" key="disabled">未启用</Tag>);
+      tags.push(
+        <Tag color="red" key="disabled">
+          未启用
+        </Tag>,
+      );
     }
 
-    if (!provider.api_key || provider.api_key.includes('****') || provider.api_key === '未配置') {
-      tags.push(<Tag color="orange" key="unconfigured">未配置</Tag>);
+    if (
+      !provider.api_key ||
+      provider.api_key.includes("****") ||
+      provider.api_key === "未配置"
+    ) {
+      tags.push(
+        <Tag color="orange" key="unconfigured">
+          未配置
+        </Tag>,
+      );
     }
 
     return tags;
@@ -181,10 +204,7 @@ export const ProviderCard: React.FC<Props> = ({
             okText="确定"
             cancelText="取消"
           >
-            <Button
-              danger
-              icon={<DeleteOutlined />}
-            >
+            <Button danger icon={<DeleteOutlined />}>
               删除
             </Button>
           </Popconfirm>
@@ -199,7 +219,7 @@ export const ProviderCard: React.FC<Props> = ({
     >
       <Row gutter={16}>
         <Col span={24}>
-          <Space direction="vertical" size="small" style={{ width: '100%' }}>
+          <Space direction="vertical" size="small" style={{ width: "100%" }}>
             <div>
               <Text strong style={{ fontSize: 16 }}>
                 {getProviderIcon(providerKey, provider.name)} {provider.name}
@@ -231,4 +251,6 @@ export const ProviderCard: React.FC<Props> = ({
       </Row>
     </Card>
   );
-};
+});
+
+export const ProviderCardMemo = React.memo(ProviderCard);
